@@ -330,9 +330,6 @@
                 "hardwareProfile": {
                     "vmSize": "[parameters('rdshVmSize')]"
                 },
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets/', concat(parameters('rdshPrefix'), 'availabilitySet-', parameters('location')))]"
-                },
                 "osProfile": {
                     "computerName": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')))]",
                     "adminUsername": "[variables('existingDomainUsername')]",
@@ -368,6 +365,9 @@
             "apiVersion": "2018-10-01",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')), '/', 'joindomain')]",
+            "zones": [
+                "[add(1,mod(copyindex(),3))]"
+            ],
             "location": "[parameters('location')]",
             "dependsOn": ["rdsh-vm-loop"],
             "copy": {
